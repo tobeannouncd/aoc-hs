@@ -3,7 +3,7 @@ import AoC (strip, countIf, count)
 import Data.List (transpose, tails, isPrefixOf, sort)
 import Solution
 
-main :: IO ()
+main :: Solution m => m ()
 main = do
   inp <- lines . strip <$> getInput
   answer $ part1 inp
