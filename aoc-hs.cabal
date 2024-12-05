@@ -42,7 +42,7 @@ library
   autogen-modules:
       Paths_aoc_hs
   hs-source-dirs:
-      src
+      solutions
   default-extensions:
       LambdaCase
       BlockArguments
@@ -73,19 +73,4 @@ executable aoc-hs-exe
     , optparse-applicative
     , text
     , time
-    , turtle
-  default-language: GHC2021
-
-test-suite aoc-hs-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  hs-source-dirs:
-      test
-  default-extensions:
-      LambdaCase
-      BlockArguments
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      aoc-hs
-    , base >=4.7 && <5
   default-language: GHC2021
