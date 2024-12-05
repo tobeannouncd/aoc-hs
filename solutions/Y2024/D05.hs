@@ -7,8 +7,8 @@ import Solution
 inputP :: Parser ([(Int, Int)], [[Int]])
 inputP =
   (,)
-    <$> sepEndBy1 ((,) <$> nat <*> (char '|' *> nat)) newline
-    <*> (newline *> sepEndBy1 (sepBy1 nat $ char ',') newline)
+    <$> sepEndBy1 ((,) <$> nat <* char '|' <*> nat) newline <* newline
+    <*> sepEndBy1 (sepBy1 nat $ char ',') newline
 
 main :: Solution m => m ()
 main = do
