@@ -62,7 +62,6 @@ executables:
     - aoc-hs
     - optparse-applicative
     - time
-    - turtle
     - text
     - advent-of-code-api
     - mtl
