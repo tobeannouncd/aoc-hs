@@ -1,25 +1,37 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module Main (main) where
 
-import Data.Time
-import Data.Text (pack)
-import Options.Applicative
-import Turtle (stdout, inshell, input, stdin, Text, toLines)
-import Text.Printf (printf)
-import System.Environment (getEnv, lookupEnv)
 import Advent
+import Control.Monad.Reader (ReaderT (..))
+import Data.Map.Strict ((!?))
+import Data.Text (Text, unpack)
+import Data.Time
+import Options.Applicative
+import Solution (S (..))
+import Solutions (solutions)
+import System.Environment (getEnv, lookupEnv)
 
 main :: IO ()
 main = do
   (year, day, runType) <- execParser =<< mkParser
-  let fp = getSolution year day
+  soln <- getSolution year day
   case runType of
-    RDownload -> stdout . inshell fp . toLines . pure =<< getInput year day
-    RStdin    -> stdout $ inshell fp stdin
-    RFile inp -> stdout $ inshell fp (input inp)
+    RDownload -> runDownloaded soln . unpack =<< getInput year day
+    RStdin    -> runIO soln
+    RFile f   -> runDownloaded soln =<< readFile f
 
-getSolution :: Integer -> Integer -> Text
-getSolution y d = pack $ printf "stack runghc ./src/Y%d/D%02d.hs" y d
+runDownloaded :: S -> String -> IO ()
+runDownloaded (S soln) = runReaderT soln
+
+runIO :: S -> IO ()
+runIO (S soln) = soln
+
+getSolution :: Integer -> Integer -> IO S
+getSolution y d =
+  case solutions !? (y, d) of
+    Nothing -> fail "solution not found"
+    Just s -> return s
 
 getInput :: Integer -> Integer -> IO Text
 getInput year day = do
@@ -27,7 +39,7 @@ getInput year day = do
   cache <- lookupEnv "AOC_CACHE"
   day' <- maybe (fail $ "invalid day: " ++ show day) return (mkDay day)
   let agent = AoCUserAgent "tobeannouncd/aoc-hs" "tobeannouncd@gmail.com"
-      opts = (defaultAoCOpts agent year session) {_aCache = cache}
+      opts = (defaultAoCOpts agent year session){_aCache = cache}
   runAoC_ opts $ AoCInput day'
 
 latest :: IO (Integer, Integer)

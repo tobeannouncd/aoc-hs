@@ -1,4 +1,3 @@
-{-# LANGUAGE BlockArguments #-}
 module Y2024.D05 (main) where
 
 import AoC.Parsec hiding (getInput)

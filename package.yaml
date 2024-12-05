@@ -25,6 +25,10 @@ dependencies:
 
 language: GHC2021
 
+default-extensions:
+- LambdaCase
+- BlockArguments
+
 ghc-options:
 - -Wall
 - -Wcompat
@@ -44,6 +48,7 @@ library:
   - vector
   - parsec
   - linear
+  - mtl
 
 executables:
   aoc-hs-exe:
@@ -60,6 +65,8 @@ executables:
     - turtle
     - text
     - advent-of-code-api
+    - mtl
+    - containers
 
 tests:
   aoc-hs-test:

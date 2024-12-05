@@ -30,6 +30,7 @@ library
       AoC.Parsec
       AoC.ReadP
       Solution
+      Solutions
       Y2024.D01
       Y2024.D02
       Y2024.D03
@@ -42,11 +43,15 @@ library
       Paths_aoc_hs
   hs-source-dirs:
       src
+  default-extensions:
+      LambdaCase
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , containers
     , linear
+    , mtl
     , parsec
     , vector
   default-language: GHC2021
@@ -55,11 +60,16 @@ executable aoc-hs-exe
   main-is: Main.hs
   hs-source-dirs:
       app
+  default-extensions:
+      LambdaCase
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       advent-of-code-api
     , aoc-hs
     , base >=4.7 && <5
+    , containers
+    , mtl
     , optparse-applicative
     , text
     , time
@@ -71,6 +81,9 @@ test-suite aoc-hs-test
   main-is: Spec.hs
   hs-source-dirs:
       test
+  default-extensions:
+      LambdaCase
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aoc-hs

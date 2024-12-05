@@ -1,4 +1,6 @@
-module Solution (Solution(..)) where
+module Solution (Solution(..), S(..)) where
+
+import Control.Monad.Reader
 
 class (MonadFail m) => Solution m where
   getInput    :: m String
@@ -13,3 +15,11 @@ instance Solution IO where
   answer = print
   answerStr = putStr
   answerStrLn = putStrLn
+
+instance (Solution m) => Solution (ReaderT String m) where
+  getInput = ask
+  answer = lift . answer
+  answerStr = lift . answerStr
+  answerStrLn = lift . answerStrLn
+
+newtype S = S (forall m. (Solution m) => m ())
