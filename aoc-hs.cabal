@@ -1,0 +1,78 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.37.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           aoc-hs
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/tobeannouncd/aoc-hs#readme>
+homepage:       https://github.com/tobeannouncd/aoc-hs#readme
+bug-reports:    https://github.com/tobeannouncd/aoc-hs/issues
+author:         tobeannouncd
+maintainer:     wzrds3@gmail.com
+copyright:      2024 tobeannouncd
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/tobeannouncd/aoc-hs
+
+library
+  exposed-modules:
+      AoC
+      AoC.Coord
+      AoC.Parsec
+      AoC.ReadP
+      Solution
+      Y2024.D01
+      Y2024.D02
+      Y2024.D03
+      Y2024.D04
+      Y2024.D05
+      Y2024.D06
+  other-modules:
+      Paths_aoc_hs
+  autogen-modules:
+      Paths_aoc_hs
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , linear
+    , parsec
+    , vector
+  default-language: GHC2021
+
+executable aoc-hs-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      advent-of-code-api
+    , aoc-hs
+    , base >=4.7 && <5
+    , optparse-applicative
+    , text
+    , time
+    , turtle
+  default-language: GHC2021
+
+test-suite aoc-hs-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc-hs
+    , base >=4.7 && <5
+  default-language: GHC2021
