@@ -29,6 +29,7 @@ library
       AoC.Coord
       AoC.Parsec
       AoC.ReadP
+      AoC.Search
       Solution
       Solutions
       Y2024.D01
