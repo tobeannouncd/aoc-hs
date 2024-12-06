@@ -14,7 +14,7 @@ main = do
   let guardPath = unfoldr (walk tileMap) start
       start = (guardPos, facing)
   answer $ length $ nubOrd $ map fst guardPath
-  -- \| I know this isn't efficient. I'll optimize later.
+  -- | I know this isn't efficient. I'll optimize later.
   answer $
     length
       [ ()
