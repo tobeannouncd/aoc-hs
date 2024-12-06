@@ -11,14 +11,14 @@ import Solution
 main :: (Solution m) => m ()
 main = do
   (guardPos, facing, tileMap) <- process . from2dString <$> getInput
-  let guardPath = unfoldr (walk tileMap) start
+  let guardPath = nubOrd . map fst $ unfoldr (walk tileMap) start
       start = (guardPos, facing)
-  answer $ length $ nubOrd $ map fst guardPath
+  answer $ length guardPath
   -- | I know this isn't efficient. I'll optimize later.
   answer $
     length
       [ ()
-      | (pt, Open) <- Map.toList tileMap
+      | pt <- guardPath
       , let tileMap' = Map.insert pt Obstacle tileMap
       , isLoop $ unfoldr (walk tileMap') start
       ]
