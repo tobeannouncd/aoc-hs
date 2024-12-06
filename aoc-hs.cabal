@@ -37,6 +37,25 @@ library
       Y2024.D04
       Y2024.D05
       Y2024.D06
+      Y2024.D07
+      Y2024.D08
+      Y2024.D09
+      Y2024.D10
+      Y2024.D11
+      Y2024.D12
+      Y2024.D13
+      Y2024.D14
+      Y2024.D15
+      Y2024.D16
+      Y2024.D17
+      Y2024.D18
+      Y2024.D19
+      Y2024.D20
+      Y2024.D21
+      Y2024.D22
+      Y2024.D23
+      Y2024.D24
+      Y2024.D25
   other-modules:
       Paths_aoc_hs
   autogen-modules:
