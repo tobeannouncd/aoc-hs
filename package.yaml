@@ -49,6 +49,7 @@ library:
   - parsec
   - linear
   - mtl
+  - lens
 
 executables:
   aoc-hs-exe:

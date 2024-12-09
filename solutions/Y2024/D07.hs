@@ -2,7 +2,8 @@ module Y2024.D07 (main) where
 
 import Solution
 import AoC.Parsec hiding (getInput)
-import Control.Monad (forM_)
+import Data.List.Lens (stripSuffix)
+
 
 inputP :: Parser [(Integer, [Integer])]
 inputP = sepEndBy1 p newline
@@ -14,14 +15,15 @@ inputP = sepEndBy1 p newline
 main :: (Solution m) => m ()
 main = do
   equations <- parse' inputP =<< getInput
-  forM_ [[(+),(*)], [(+),(*),concatInt]] $ \ops -> do
-    answer $ sum [t | (t,eqn) <- equations, t `elem` combos ops eqn]
+  answer $ sum [t | (t,eqn) <- equations, check part1 t eqn]
+  answer $ sum [t | (t,eqn) <- equations, check part2 t eqn]
 
-combos :: [a -> a -> a] -> [a] -> [a]
-combos ops (x:xs) = foldl f [x] xs
- where
-  f acc b = [a `op` b | a <- acc, op <- ops]
-combos _ _ = undefined
+check :: (Integer -> Integer -> [Integer]) -> Integer -> [Integer] -> Bool
+check f x xs = 0 `elem` foldr (concatMap . f) [x] xs
 
-concatInt :: Integer -> Integer -> Integer
-concatInt a b = read $ show a ++ show b
+part1,part2 :: Integer -> Integer -> [Integer]
+part1 x y =
+  [y-x | y >= x] ++
+  [q | (q,0) <- [y `quotRem` x]]
+part2 x y = part1 x y
+  ++ [read p | Just p@(_:_) <- [stripSuffix (show x) (show y)]]
