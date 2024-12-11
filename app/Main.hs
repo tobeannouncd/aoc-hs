@@ -11,6 +11,7 @@ import Options.Applicative
 import Solution (S (..))
 import Solutions (solutions)
 import System.Environment (getEnv, lookupEnv)
+import Control.Monad.RWS (RWST (runRWST))
 
 main :: IO ()
 main = do
@@ -26,6 +27,10 @@ runDownloaded (S soln) = runReaderT soln
 
 runIO :: S -> IO ()
 runIO (S soln) = soln
+
+runMaybe :: S -> String -> Maybe String
+runMaybe (S soln) inp = (\(_,_,x) -> x "")
+                      <$> (runRWST soln inp () :: Maybe ((),(),ShowS))
 
 getSolution :: Integer -> Integer -> IO S
 getSolution y d =
