@@ -27,5 +27,6 @@ instance (Solution m) => Solution (WriterT [String] m) where
   getInput = lift getInput
   answer = tell . pure . show
   answerStr = tell . pure
+  answerStrLn = tell . pure
 
 newtype S = S (forall m. (Solution m) => m ())
