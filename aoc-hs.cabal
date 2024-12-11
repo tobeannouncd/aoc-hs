@@ -28,6 +28,7 @@ library
       AoC
       AoC.Coord
       AoC.Parsec
+      AoC.Queue
       AoC.ReadP
       AoC.Search
       Solution

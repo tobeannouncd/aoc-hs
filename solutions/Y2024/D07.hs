@@ -5,7 +5,7 @@ import AoC.Parsec hiding (getInput)
 import Data.List.Lens (stripSuffix)
 
 
-inputP :: Parser [(Integer, [Integer])]
+inputP :: Parser [(Int, [Int])]
 inputP = sepEndBy1 p newline
  where
   p = (,)
@@ -18,12 +18,10 @@ main = do
   answer $ sum [t | (t,eqn) <- equations, check part1 t eqn]
   answer $ sum [t | (t,eqn) <- equations, check part2 t eqn]
 
-check :: (Integer -> Integer -> [Integer]) -> Integer -> [Integer] -> Bool
+check :: (Int -> Int -> [Int]) -> Int -> [Int] -> Bool
 check f x xs = 0 `elem` foldr (concatMap . f) [x] xs
 
-part1,part2 :: Integer -> Integer -> [Integer]
-part1 x y =
-  [y-x | y >= x] ++
-  [q | (q,0) <- [y `quotRem` x]]
+part1,part2 :: Int -> Int -> [Int]
+part1 x y = [y-x | y >= x] ++ [q | (q,0) <- [y `quotRem` x]]
 part2 x y = part1 x y
   ++ [read p | Just p@(_:_) <- [stripSuffix (show x) (show y)]]
