@@ -10,7 +10,9 @@ main = do
   answer $ sum $ iterate blink' stones !! 75
 
 blink' :: Map.IntMap Int -> Map.IntMap Int
-blink' stones = Map.fromListWith (+) [(s', c) | (s, c) <- Map.toList stones, s' <- blink s]
+blink' = Map.foldrWithKey f Map.empty
+ where
+  f s c m = foldr (\s' -> Map.insertWith (+) s' c) m $ blink s
 
 blink :: Int -> [Int]
 blink 0 = [1]
