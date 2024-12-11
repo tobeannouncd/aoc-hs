@@ -67,3 +67,4 @@ executables:
     - advent-of-code-api
     - mtl
     - containers
+    - criterion

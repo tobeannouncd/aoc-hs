@@ -4,6 +4,7 @@ module Main (main) where
 
 import Advent
 import Control.Monad.Reader (ReaderT (..))
+import Criterion
 import Data.Map.Strict ((!?))
 import Data.Text (Text, unpack)
 import Data.Time
@@ -15,22 +16,28 @@ import Control.Monad.RWS (RWST (runRWST))
 
 main :: IO ()
 main = do
-  (year, day, runType) <- execParser =<< mkParser
+  (year, day, runType, b) <- execParser =<< mkParser
   soln <- getSolution year day
   case runType of
-    RDownload -> runDownloaded soln . unpack =<< getInput year day
-    RStdin    -> runIO soln
-    RFile f   -> runDownloaded soln =<< readFile f
+    RDownload -> runDownloaded b soln . unpack =<< getInput year day
+    RStdin    -> runIO b soln
+    RFile f   -> runDownloaded b soln =<< readFile f
 
-runDownloaded :: S -> String -> IO ()
-runDownloaded (S soln) = runReaderT soln
+runDownloaded :: Bool -> S -> String -> IO ()
+runDownloaded b (S soln) =
+  if b
+    then runBench soln
+    else runReaderT soln
 
-runIO :: S -> IO ()
-runIO (S soln) = soln
+runBench :: RWST String ShowS () [] () -> String -> IO ()
+runBench soln = benchmark
+              . nf (\inp -> map (\(_,_,s) -> s "") (runRWST soln inp ()))
 
-runMaybe :: S -> String -> Maybe String
-runMaybe (S soln) inp = (\(_,_,x) -> x "")
-                      <$> (runRWST soln inp () :: Maybe ((),(),ShowS))
+runIO :: Bool -> S -> IO ()
+runIO b (S soln) =
+  if b
+    then runBench soln =<< getContents
+    else soln
 
 getSolution :: Integer -> Integer -> IO S
 getSolution y d =
@@ -61,7 +68,7 @@ data RunType
   | RStdin
   | RFile FilePath
 
-mkParser :: IO (ParserInfo (Integer, Integer, RunType))
+mkParser :: IO (ParserInfo (Integer, Integer, RunType, Bool))
 mkParser = do
   (yearDef, dayDef) <- latest
   let parser = p yearDef dayDef
@@ -69,7 +76,7 @@ mkParser = do
  where
   mods = mempty
   p y d =
-    (,,)
+    (,,,)
       <$> argument
         auto
         ( metavar "YEAR"
@@ -86,11 +93,12 @@ mkParser = do
         )
       <*> ( flag' RStdin (short 's' <> long "stdin" <> help "use stdin as input")
               <|> RFile
-              <$> strOption
-                ( short 'f'
-                    <> long "file"
-                    <> completer (bashCompleter "directory")
-                    <> help "get input from file"
-                )
-                <|> pure RDownload
+                <$> strOption
+                  ( short 'f'
+                      <> long "file"
+                      <> completer (bashCompleter "directory")
+                      <> help "get input from file"
+                  )
+              <|> pure RDownload
           )
+      <*> switch (short 'b' <> long "bench" <> help "benchmark solution")

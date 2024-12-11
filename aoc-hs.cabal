@@ -91,6 +91,7 @@ executable aoc-hs-exe
     , aoc-hs
     , base >=4.7 && <5
     , containers
+    , criterion
     , mtl
     , optparse-applicative
     , text

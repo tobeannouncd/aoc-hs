@@ -6,13 +6,14 @@ Solutions for Advent of Code problems in Haskell.
 Solutions can be run by executing `stack run -- [ARGUMENT(s)]`
 
 ```
-Usage: aoc-hs-exe [YEAR] [DAY] [(-s|--stdin) | (-f|--file ARG)]
+Usage: aoc-hs-exe [YEAR] [DAY] [(-s|--stdin) | (-f|--file ARG)] [-b|--bench]
 
 Available options:
   YEAR                     puzzle year (default: <year of most recent puzzle>)
   DAY                      puzzle day (default: <day of most recent puzzle>)
   -s,--stdin               use stdin as input
   -f,--file ARG            get input from file
+  -b,--bench               benchmark solution
   -h,--help                Show this help text
 ```
 
