@@ -1,3 +1,6 @@
+{-|
+https://github.com/glguy/advent/blob/main/common/src/Advent/Queue.hs
+-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE ViewPatterns #-}
 module AoC.Queue (

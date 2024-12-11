@@ -18,13 +18,13 @@ dfsOn rep next = dfsOnN rep next . pure
 {-# INLINE dfsOn #-}
 
 dfsOnN :: Ord t => (a -> t) -> (a -> [a]) -> [a] -> [a]
-dfsOnN rep next = loop Set.empty
+dfsOnN rep next = go Set.empty
  where
-  loop !seen = \case
+  go !seen = \case
     [] -> []
     x:xs
-      | Set.member r seen -> loop seen xs
-      | otherwise -> x : loop seen' (next x ++ xs)
+      | r `Set.member` seen -> go seen xs
+      | otherwise -> x : go seen' (next x ++ xs)
       where
         r = rep x
         seen' = Set.insert r seen
@@ -42,13 +42,13 @@ bfsOn rep nxt = bfsOnN rep nxt . pure
 {-# INLINE [0] bfsOn #-}
 
 bfsOnN :: Ord r => (a -> r) -> (a -> [a]) -> [a] -> [a]
-bfsOnN rep next starts = loop Set.empty (Q.fromList starts)
+bfsOnN rep next starts = go Set.empty (Q.fromList starts)
  where
-  loop !seen = \case
+  go !seen = \case
     Q.Empty -> []
     x Q.:<| q
-      | Set.member r seen -> loop seen q
-      | otherwise -> x : loop seen' q'
+      | r `Set.member` seen -> go seen q
+      | otherwise -> x : go seen' q'
       where
         r = rep x
         seen' = Set.insert r seen
