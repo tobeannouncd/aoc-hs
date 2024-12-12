@@ -7,6 +7,7 @@ module AoC.Parsec (
 import Text.Parsec
 import Text.Parsec.String
 import Data.Char (digitToInt)
+import AoC (eitherToFail)
 
 nat :: Integral a => Parser a
 nat = toNat <$> many1 digit
@@ -19,4 +20,4 @@ int = (*)
   <*> nat
 
 parse' :: (MonadFail m) => Parser a -> String -> m a
-parse' p = either (fail . show) return . parse p ""
+parse' p = eitherToFail . parse p ""
