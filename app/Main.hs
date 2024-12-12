@@ -4,7 +4,7 @@ module Main (main) where
 
 import Advent
 import Control.Monad.Reader (ReaderT (..))
-import Criterion
+import Criterion ( benchmark, nf )
 import Data.Map.Strict ((!?))
 import Data.Text (Text, unpack)
 import Data.Time
@@ -70,35 +70,13 @@ data RunType
 
 mkParser :: IO (ParserInfo (Integer, Integer, RunType, Bool))
 mkParser = do
-  (yearDef, dayDef) <- latest
-  let parser = p yearDef dayDef
-  return $ info (parser <**> helper) mods
+  (y, d) <- latest
+  let parser = (,,,) <$> pYear y <*> pDay d <*> pRunType <*> pBench <**> helper
+  return $ info parser mempty
  where
-  mods = mempty
-  p y d =
-    (,,,)
-      <$> argument
-        auto
-        ( metavar "YEAR"
-            <> value y
-            <> showDefault
-            <> help "puzzle year"
-        )
-      <*> argument
-        auto
-        ( metavar "DAY"
-            <> value d
-            <> showDefault
-            <> help "puzzle day"
-        )
-      <*> ( flag' RStdin (short 's' <> long "stdin" <> help "use stdin as input")
-              <|> RFile
-                <$> strOption
-                  ( short 'f'
-                      <> long "file"
-                      <> completer (bashCompleter "directory")
-                      <> help "get input from file"
-                  )
-              <|> pure RDownload
-          )
-      <*> switch (short 'b' <> long "bench" <> help "benchmark solution")
+  pYear y = argument auto (metavar "YEAR" <> value y <> showDefault <> help "puzzle year")
+  pDay d  = argument auto (metavar "DAY"  <> value d <> showDefault <> help "puzzle day")
+  pRunType =   flag' RStdin        (short 's' <> long "stdin" <> help "use stdin as input")
+           <|> RFile <$> strOption (short 'f' <> long "file"  <> completer (bashCompleter "directory"))
+           <|> pure RDownload
+  pBench = switch (short 'b' <> long "bench" <> help "benchmark solution")
