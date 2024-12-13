@@ -4,7 +4,7 @@ module AoC.Parsec (
   nat, int, parse',
 ) where
 
-import Text.Parsec
+import Text.Parsec hiding (getInput)
 import Text.Parsec.String
 import Data.Char (digitToInt)
 import AoC (eitherToFail)

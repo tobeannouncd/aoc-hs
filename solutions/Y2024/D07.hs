@@ -1,7 +1,7 @@
 module Y2024.D07 (main) where
 
 import Solution
-import AoC.Parsec hiding (getInput)
+import AoC.Parsec
 import Data.List.Lens (stripSuffix)
 
 

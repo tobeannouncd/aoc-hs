@@ -1,6 +1,6 @@
 module Y2024.D03 (main) where
 
-import AoC.Parsec hiding (getInput)
+import AoC.Parsec
 import Solution
 
 data Command
