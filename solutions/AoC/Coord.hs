@@ -27,17 +27,39 @@ module AoC.Coord (
   from2dString,
 ) where
 
-import Data.Foldable (toList)
-import Data.Map (Map)
-import Data.Semigroup (Max (Max), Min (Min))
-import Linear.V2 (V2 (..))
-
+import Data.Foldable  (toList)
+import Data.Ix        (Ix)
+import Data.Map       (Map)
 import Data.Map.Strict qualified as Map
+import Data.Semigroup (Max (Max), Min (Min))
+import Linear.V2      (V2 (..))
+import Text.Read      (readPrec, Lexeme(Ident), parens, lift, prec, step)
+import Text.Read.Lex  (expect)
 
-type Coord = V2 Int
+
+newtype Coord' a = Coord' (V2 a)
+  deriving (Eq, Ord, Num, Ix, Foldable, Functor)
+
+type Coord = Coord' Int
+
+instance Show Coord where
+  showsPrec p (C y x) = showParen (p > 10)
+                      $ showString "C "
+                      . showsPrec 11 y
+                      . showChar ' '
+                      . showsPrec 11 x
+
+instance Read Coord where
+  readPrec = parens (prec 10 p)
+   where
+    p = do
+      lift $ expect (Ident "C")
+      y <- step readPrec
+      x <- step readPrec
+      return (C y x)
 
 pattern C :: Int -> Int -> Coord
-pattern C{yVal, xVal} = V2 yVal xVal
+pattern C{yVal, xVal} = Coord' (V2 yVal xVal)
 
 {-# COMPLETE C #-}
 

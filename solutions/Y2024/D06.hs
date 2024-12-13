@@ -10,14 +10,14 @@ import AoC (countIf)
 main :: (Solution m) => m ()
 main = do
   (guardPos, facing, tileMap) <- process . from2dString <$> getInput
-  let guardPath = nubOrd . map fst $ walk' tileMap start
+  let guardPath = nubOrd . map fst $ walk tileMap start
       start = (guardPos, facing)
-      check pt = isLoop $ walk' (Map.insert pt Obstacle tileMap) start
+      check pt = isLoop $ walk (Map.insert pt Obstacle tileMap) start
   answer $ length guardPath
   answer $ countIf check (tail guardPath)
 
-walk' :: Map Coord Tile -> (Coord, Coord) -> [(Coord, Coord)]
-walk' grid = uncurry go
+walk :: Map Coord Tile -> (Coord, Coord) -> [(Coord, Coord)]
+walk grid = uncurry go
  where
   go pos dir = (pos, dir) :
     case grid !? (pos + dir) of
