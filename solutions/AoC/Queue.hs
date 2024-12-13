@@ -30,6 +30,7 @@ pattern Empty <- Queue [] _ _
 pattern (:<|) :: a -> Queue a -> Queue a
 pattern x :<| xs <- (pop -> Just (x,xs))
 
+-- | Inline equivalent to @flip 'snoc'@
 (|>) :: Queue a -> a -> Queue a
 (|>) = flip snoc
 {-# INLINE (|>) #-}
@@ -60,17 +61,22 @@ appendList = foldl' (|>)
 snoc :: a -> Queue a -> Queue a
 snoc x (Queue f r d) = rebalance f (x:r) d
 
+-- | Helper function that should be called when either
+--   * Taking an element off of the front, or
+--   * Adding an item to the rear
+--
+--   when another queue is desired.
 rebalance :: [a] -> [a] -> Int -> Queue a
 rebalance f r 0 = fromList (rotate f r [])
 rebalance f r i = Queue f r (i-1)
 
 -- | Lazily converts the front and rear of a queue into
---   a single list.
+--   a single list. Should only be called when front is
+--   exactly one element shorter than rear.
 rotate :: [a] -> [a] -> [a] -> [a]
 rotate [] (y:_) acc = y:acc
 rotate (x:xs) (y:ys) acc = x : rotate xs ys (y:acc)
 rotate _ _ _ = error "Queue invariant violated"
-
 
 pop :: Queue a -> Maybe (a, Queue a)
 pop (Queue (x:f) r d) = Just (x, rebalance f r d)
