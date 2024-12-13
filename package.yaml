@@ -45,11 +45,11 @@ library:
   generated-other-modules: Paths_aoc_hs
   dependencies:
   - containers
-  - vector
   - parsec
   - linear
   - mtl
   - lens
+  - array
 
 executables:
   aoc-hs-exe:
