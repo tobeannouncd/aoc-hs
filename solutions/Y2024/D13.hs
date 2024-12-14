@@ -7,6 +7,7 @@ import Data.Maybe (mapMaybe)
 import Linear
 import Data.Ix (Ix(..))
 import Control.Monad (when, guard)
+import Data.Ratio
 
 type Input = (V2 Int, V2 Int, V2 Int)
 
@@ -18,11 +19,11 @@ inputP = (,,) <$> button 'A' <*> button 'B' <*> prize
            <*> int <* newline
   prize    =   V2 <$ string "Prize: X="
            <*> int <* string ", Y="
-           <*> int <* newline
+           <*> int <* optional newline
 
 main :: Solution m => m ()
 main = do
-  input <- parse' (sepEndBy1 inputP newline) =<< getInput
+  input <- parse' (sepBy1 inputP newline) =<< getInput
   answer $ sum $ mapMaybe (winCost (Just 100)) input
   answer $ sum $ mapMaybe (winCost Nothing . incr 10000000000000) input
 
@@ -39,9 +40,10 @@ winCost :: Maybe Int -> Input -> Maybe Int
 winCost limit (buttonA, buttonB, target) = do
   let mat  = transpose (V2 buttonA buttonB)
       mat' = (fromIntegral <$>) <$> mat
-      tgt  = fromIntegral <$> target :: V2 Double
-      sol  = round <$> luSolveFinite mat' tgt
+      tgt  = fromIntegral <$> target :: V2 Rational
+      sol' = luSolveFinite mat' tgt
+      sol  = fromIntegral . numerator <$> sol'
   when (det22 mat == 0) $ error "Diophantus, is that you?"
-  guard $ mat !* sol == target
+  guard $ all ((== 1) . denominator) sol'
   guard $ maybe True (\l -> inRange (0, pure l) sol) limit
   return $ sum $ sol *! scaled (V2 3 1)
