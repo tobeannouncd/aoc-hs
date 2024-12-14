@@ -5,14 +5,18 @@ module Main (main) where
 import Advent
 import Control.Monad.Reader (ReaderT (..))
 import Criterion ( benchmark, nf )
-import Data.Map.Strict ((!?))
+import Data.Map.Strict ((!?), unions, Map)
 import Data.Text (Text, unpack)
 import Data.Time
 import Options.Applicative
 import Solution (S (..))
-import Solutions (solutions)
 import System.Environment (getEnv, lookupEnv)
 import Control.Monad.RWS (RWST (runRWST))
+
+import Y2024.Solutions qualified as Y24
+
+solutions :: Map (Integer, Integer) S
+solutions = unions [Y24.solutions]
 
 main :: IO ()
 main = do

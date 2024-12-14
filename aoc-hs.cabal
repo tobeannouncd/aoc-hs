@@ -32,7 +32,6 @@ library
       AoC.ReadP
       AoC.Search
       Solution
-      Solutions
       Y2024.D01
       Y2024.D02
       Y2024.D03
@@ -58,6 +57,7 @@ library
       Y2024.D23
       Y2024.D24
       Y2024.D25
+      Y2024.Solutions
   other-modules:
       Paths_aoc_hs
   autogen-modules:

@@ -1,6 +1,6 @@
-module Solutions (solutions) where
+module Y2024.Solutions (solutions) where
 
-import Solution (S(..))
+import Solution(S(..))
 import Data.Map.Strict (Map, fromList)
 
 import Y2024.D01 qualified as Y24D01
