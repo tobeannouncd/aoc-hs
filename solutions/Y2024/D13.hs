@@ -1,4 +1,3 @@
-{-# LANGUAGE MonadComprehensions #-}
 module Y2024.D13 (main) where
 
 import Solution
