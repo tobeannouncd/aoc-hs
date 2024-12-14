@@ -5,34 +5,43 @@ import Solution
 import AoC.Parsec
 import Data.Maybe (mapMaybe)
 import Linear
+import Data.Ix (Ix(..))
+import Control.Monad (when, guard)
 
-type Dist  = Int
-type Input = V3 (V2 Dist)
+type Input = (V2 Int, V2 Int, V2 Int)
 
 inputP :: Parser Input
-inputP = V3 <$> button <*> button <*> prize
+inputP = (,,) <$> button 'A' <*> button 'B' <*> prize
  where
-  button =   V2 <$ (string "Button " *> satisfy (`elem` "AB") *> string ": X+")
-         <*> int <* string ", Y+"
-         <*> int <* newline
-  prize  =   V2 <$ string "Prize: X="
-         <*> int <* string ", Y="
-         <*> int <* newline
+  button c =   V2 <$ (string "Button " *> char c *> string ": X+")
+           <*> int <* string ", Y+"
+           <*> int <* newline
+  prize    =   V2 <$ string "Prize: X="
+           <*> int <* string ", Y="
+           <*> int <* newline
 
 main :: Solution m => m ()
 main = do
   input <- parse' (sepEndBy1 inputP newline) =<< getInput
-  answer $ sum $ mapMaybe winCost input
-  answer $ sum $ mapMaybe (winCost . incr 10000000000000) input
+  answer $ sum $ mapMaybe (winCost (Just 100)) input
+  answer $ sum $ mapMaybe (winCost Nothing . incr 10000000000000) input
 
-incr :: Dist -> Input -> Input
-incr n (V3 a b c) = V3 a b (pure n + c)
+incr :: Int -> Input -> Input
+incr n (a,b,t) = (a,b, pure n + t)
 
-winCost :: Input -> Maybe Dist
-winCost (V3 buttonA buttonB target)
-  = [ sum $ sol *! V2 (V2 3 0) (V2 0 1) | mat !* sol == target ]
- where
-  mat  = transpose $ V2 buttonA buttonB
-  mat' = (fromIntegral <$>) <$> mat
-  sol  = round <$> inv22 mat' !* tgt
-  tgt  = fromIntegral <$> target :: V2 Double
+{-|
+This function fails on inputs that have collinear button vectors. It is likely
+that the inputs were designed to avoid this. It is also likely that the inputs
+do not contain claw machines where the target can be reached in part 1 with
+more than 100 button presses on either button.
+-}
+winCost :: Maybe Int -> Input -> Maybe Int
+winCost limit (buttonA, buttonB, target) = do
+  let mat  = transpose (V2 buttonA buttonB)
+      mat' = (fromIntegral <$>) <$> mat
+      tgt  = fromIntegral <$> target :: V2 Double
+      sol  = round <$> luSolveFinite mat' tgt
+  when (det22 mat == 0) $ error "Diophantus, is that you?"
+  guard $ mat !* sol == target
+  guard $ maybe True (\l -> inRange (0, pure l) sol) limit
+  return $ sum $ sol *! scaled (V2 3 1)
