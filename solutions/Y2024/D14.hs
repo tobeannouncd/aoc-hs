@@ -4,7 +4,6 @@ import Solution
 import AoC.Parsec
 import AoC.Coord
 import Data.List (group, sort)
-import qualified Data.Set as S
 
 isExample :: Bool
 isExample = False
@@ -139,9 +138,16 @@ main = do
 ···························█············································█···························
 -}
 
--- | This was just a lucky guess. I'm guessing the inputs were designed this way
+-- | This was just a lucky guess. I'm guessing the inputs were designed this
+--   way. Also, we can take advantage of lazy evaluation with this method
+--   instead of doing something like:
+--
+-- > length xs == Data.Set.size (Data.Set.fromList xs)
 isTree :: [Coord] -> Bool
-isTree pts = length pts == S.size (S.fromList pts)
+isTree = go . sort
+ where
+  go (a:b:xs) = a /= b && go (b:xs)
+  go _ = True
 
 wait :: Int -> Robot -> Robot
 wait secs (C y x,vel@(C vy vx)) = (C y' x', vel)
