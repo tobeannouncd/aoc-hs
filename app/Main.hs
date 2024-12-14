@@ -43,7 +43,7 @@ getSolution :: Integer -> Integer -> IO S
 getSolution y d =
   case solutions !? (y, d) of
     Nothing -> fail "solution not found"
-    Just s -> return s
+    Just s  -> return s
 
 getInput :: Integer -> Integer -> IO Text
 getInput year day = do
@@ -51,7 +51,7 @@ getInput year day = do
   cache <- lookupEnv "AOC_CACHE"
   day' <- maybe (fail $ "invalid day: " ++ show day) return (mkDay day)
   let agent = AoCUserAgent "tobeannouncd/aoc-hs" "tobeannouncd@gmail.com"
-      opts = (defaultAoCOpts agent year session){_aCache = cache}
+      opts  = (defaultAoCOpts agent year session){_aCache = cache}
   runAoC_ opts $ AoCInput day'
 
 latest :: IO (Integer, Integer)
@@ -74,9 +74,19 @@ mkParser = do
   let parser = (,,,) <$> pYear y <*> pDay d <*> pRunType <*> pBench <**> helper
   return $ info parser mempty
  where
-  pYear y = argument auto (metavar "YEAR" <> value y <> showDefault <> help "puzzle year")
-  pDay d  = argument auto (metavar "DAY"  <> value d <> showDefault <> help "puzzle day")
-  pRunType =   flag' RStdin        (short 's' <> long "stdin" <> help "use stdin as input")
-           <|> RFile <$> strOption (short 'f' <> long "file"  <> completer (bashCompleter "directory"))
+  pYear y = argument auto (  metavar "YEAR"
+                          <> value y
+                          <> showDefault
+                          <> help "puzzle year" )
+  pDay d  = argument auto (  metavar "DAY"
+                          <> value d
+                          <> showDefault
+                          <> help "puzzle day" )
+  pRunType =   flag' RStdin        (  short 's'
+                                   <> long "stdin"
+                                   <> help "use stdin as input" )
+           <|> RFile <$> strOption (  short 'f'
+                                   <> long "file"
+                                   <> completer (bashCompleter "directory") )
            <|> pure RDownload
   pBench = switch (short 'b' <> long "bench" <> help "benchmark solution")
