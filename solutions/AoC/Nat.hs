@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
-module AoC.Nat where
+module AoC.Nat (Nat(..), FromNatural, UnfoldNat(..)) where
 
 import GHC.TypeNats qualified as T
 

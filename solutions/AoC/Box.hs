@@ -1,7 +1,14 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MonadComprehensions #-}
-module AoC.Box where
+module AoC.Box (
+  Box', Box(..),
+  size,
+  intersectBox, intersectBoxes,
+  subtractBox,
+  coverBox, coverBoxes,
+  unionBoxes
+) where
 
 import AoC.Nat
 import Control.Monad (foldM)
