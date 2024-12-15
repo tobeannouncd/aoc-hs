@@ -4,6 +4,7 @@ import Solution
 import AoC.Parsec
 import AoC.Coord
 import Data.List (group, sort)
+import Math.NumberTheory.Moduli (chinese)
 
 isExample :: Bool
 isExample = False
@@ -25,10 +26,8 @@ main :: Solution m => m ()
 main = do
   robots <- parse' (sepEndBy1 inputP newline) =<< getInput
   let part1 = map (wait 100) robots
-      steps = iterate (map (wait 1)) robots
-      (part2, tree) = head [ (i,map fst x)
-                           | (i,x) <- zip [0..] steps
-                           , isTree (map fst x) ]
+      steps = map (map fst) $ take (width * height) $ iterate (map (wait 1)) robots
+      (part2, tree) = findTree steps
   answer $ safetyFactor part1
   answer (part2 :: Int)
   answerStr $ drawCoords tree
@@ -138,16 +137,24 @@ main = do
 ···························█············································█···························
 -}
 
--- | This was just a lucky guess. I'm guessing the inputs were designed this
---   way. Also, we can take advantage of lazy evaluation with this method
---   instead of doing something like:
---
--- > length xs == Data.Set.size (Data.Set.fromList xs)
-isTree :: [Coord] -> Bool
-isTree = go . sort
+-- | Finds the times that produce the lowest variance in X and Y individually,
+--   and uses the Chinese Remainder Theorem to determine the time that produces
+--   the minimum variance in X and Y simultaneously.
+findTree :: [[Coord]] -> (Int, [Coord])
+findTree steps =
+  case chinese (tx,width) (ty,height) of
+    Just (t,_) -> (t, steps !! t)
+    _ -> error "uh, oh"
  where
-  go (a:b:xs) = a /= b && go (b:xs)
-  go _ = True
+  len = fromIntegral (length $ head steps) :: Double
+  justXs = map (map xVal) steps
+  justYs = map (map yVal) steps
+  tx = snd $ minimum $ zip (map variance justXs) [0..]
+  ty = snd $ minimum $ zip (map variance justYs) [0..]
+  variance xs =
+    let xs' = map fromIntegral xs
+        mn = sum xs' / len
+    in sum [(x-mn)^(2 :: Int) | x <- xs'] / (len-1)
 
 wait :: Int -> Robot -> Robot
 wait secs (C y x,vel@(C vy vx)) = (C y' x', vel)

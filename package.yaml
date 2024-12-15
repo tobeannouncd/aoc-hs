@@ -50,6 +50,7 @@ library:
   - mtl
   - lens
   - array
+  - arithmoi
 
 executables:
   aoc-hs-exe:
