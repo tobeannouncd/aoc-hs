@@ -3,7 +3,7 @@ module Y2024.D12 (main) where
 import Solution
 import qualified Data.Map as Map
 import AoC.Coord
-import Data.Map (Map)
+import Data.Map (Map, (!?))
 import qualified Data.Set as Set
 import AoC.Search (dfs)
 import Data.List ((\\))
@@ -26,7 +26,10 @@ findRegions garden = go Set.empty (Map.keys garden)
         seen'  = foldr Set.insert seen region
         rest'  = rest \\ region
     in region : go seen' rest'
-  next here = filter ((== garden Map.!? here) . (garden Map.!?)) (cardinal here)
+  next here =
+    [ there
+    | there <- cardinal here
+    , garden !? here == garden !? there ]
 
 perimeter :: [Coord] -> Int
 perimeter region = countIf (`notElem` region) $ concatMap cardinal region

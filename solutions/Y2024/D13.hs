@@ -13,7 +13,7 @@ type Input = (V2 Int, V2 Int, V2 Int)
 inputP :: Parser Input
 inputP = (,,) <$> button 'A' <*> button 'B' <*> prize
  where
-  button c =   V2  <$ (string "Button " *> char c *> string ": X+")
+  button c =   V2  <$ string "Button " <* char c <* string ": X+"
            <*> int <* string ", Y+"
            <*> int <* newline
   prize    =   V2  <$ string "Prize: X="
