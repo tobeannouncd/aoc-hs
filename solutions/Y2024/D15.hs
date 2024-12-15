@@ -37,8 +37,8 @@ sim (grid, here) move =
     , Just c <- M.lookup pt grid
     = if c == '#' then Nothing else
       go (M.insert pt c seen)
-         ([pt + east | yVal move /= 0, c == '['] ++
-          [pt + west | yVal move /= 0, c == ']'] ++
+         ([pt + east | c == '[', yVal move /= 0] ++
+          [pt + west | c == ']', yVal move /= 0] ++
           [pt + move] ++ pts)
     | otherwise = go seen pts
 
