@@ -43,11 +43,12 @@ newtype Coord' a = Coord' (V2 a)
 type Coord = Coord' Int
 
 instance Show Coord where
-  showsPrec p (C y x) = showParen (p > 10)
-                      $ showString "C "
-                      . showsPrec 11 y
-                      . showChar ' '
-                      . showsPrec 11 x
+  showsPrec p (C y x)
+    = showParen (p > 10)
+    $ showString "C "
+    . showsPrec 11 y
+    . showChar ' '
+    . showsPrec 11 x
 
 instance Read Coord where
   readPrec = parens (prec 10 p)

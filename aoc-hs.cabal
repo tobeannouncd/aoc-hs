@@ -26,7 +26,9 @@ source-repository head
 library
   exposed-modules:
       AoC
+      AoC.Box
       AoC.Coord
+      AoC.Nat
       AoC.Parsec
       AoC.Queue
       AoC.ReadP
