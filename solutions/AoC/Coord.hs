@@ -25,6 +25,7 @@ module AoC.Coord (
   south,
   east,
   from2dString,
+  charToVec,
 ) where
 
 import Data.Foldable  (toList)
@@ -136,6 +137,14 @@ west = C 0 (-1)
 
 east :: Coord
 east = C 0 1
+
+charToVec :: (MonadFail m) => Char -> m Coord
+charToVec = \case
+  '^' -> return north
+  'v' -> return south
+  '<' -> return west
+  '>' -> return east
+  x   -> fail $ "Coord.charToVec: invalid char " ++ show x
 
 from2dString :: String -> [(Coord, Char)]
 from2dString str =
