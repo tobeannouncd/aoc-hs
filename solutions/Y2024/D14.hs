@@ -29,7 +29,7 @@ main = do
       (part2, tree) = findTree robots
   answer $ safetyFactor part1
   answer (part2 :: Int)
-  -- answerStr $ drawCoords tree
+  answerStr $ drawCoords tree
 {- ^
 ······································█·····························································
 ···················█················································································

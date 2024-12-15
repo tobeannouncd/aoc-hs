@@ -51,6 +51,7 @@ library:
   - lens
   - array
   - arithmoi
+  - split
 
 executables:
   aoc-hs-exe:
