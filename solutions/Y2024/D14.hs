@@ -26,11 +26,10 @@ main :: Solution m => m ()
 main = do
   robots <- parse' (sepEndBy1 inputP newline) =<< getInput
   let part1 = map (wait 100) robots
-      steps = map (map fst) $ take (width * height) $ iterate (map (wait 1)) robots
-      (part2, tree) = findTree steps
+      (part2, tree) = findTree robots
   answer $ safetyFactor part1
   answer (part2 :: Int)
-  answerStr $ drawCoords tree
+  -- answerStr $ drawCoords tree
 {- ^
 ······································█·····························································
 ···················█················································································
@@ -140,21 +139,24 @@ main = do
 -- | Finds the times that produce the lowest variance in X and Y individually,
 --   and uses the Chinese Remainder Theorem to determine the time that produces
 --   the minimum variance in X and Y simultaneously.
-findTree :: [[Coord]] -> (Int, [Coord])
-findTree steps =
-  case chinese (tx,width) (ty,height) of
+findTree :: [Robot] -> (Int, [Coord])
+findTree robots =
+  case chinese (ty, height) (tx, width) of
     Just (t,_) -> (t, steps !! t)
-    _ -> error "uh, oh"
+    _          -> error "PANIC"
  where
-  len = fromIntegral (length $ head steps) :: Double
-  justXs = map (map xVal) steps
-  justYs = map (map yVal) steps
-  tx = snd $ minimum $ zip (map variance justXs) [0..]
-  ty = snd $ minimum $ zip (map variance justYs) [0..]
-  variance xs =
+  steps = map (map fst) $ iterate (map (wait 1)) robots
+  xVals = map (map xVal) $ take width steps
+  yVals = map (map yVal) $ take height steps
+  nBots = fromIntegral $ length robots :: Double
+  var xs =
     let xs' = map fromIntegral xs
-        mn = sum xs' / len
-    in sum [(x-mn)^(2 :: Int) | x <- xs'] / (len-1)
+        mn  = sum xs' / nBots
+    in sum [(x-mn)^(2 :: Int) | x <- xs'] / nBots
+  ty = snd $ minimum $ zip (map var yVals) [0..]
+  tx = snd $ minimum $ zip (map var xVals) [0..]
+
+
 
 wait :: Int -> Robot -> Robot
 wait secs (C y x,vel@(C vy vx)) = (C y' x', vel)
