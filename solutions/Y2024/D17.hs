@@ -22,7 +22,8 @@ main = do
 -- | After analyzing the input file, it was noticed that the output values are
 --   generated via bit manipulations of each octet of the initial value of
 --   register A. It is assumed that the given input will not modify A in any way
---   other than bit shifting right 3 places per output value.
+--   other than bit shifting right 3 places per output value and that registers
+--   B and C depend only on the A register in each iteration of the main loop.
 part2 :: [Int] -> Int -> Int -> [Int]
 part2 prog expected prefix =
   [ a | x <- [0..7]
