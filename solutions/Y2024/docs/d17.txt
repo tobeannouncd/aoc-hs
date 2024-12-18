@@ -1,0 +1,8 @@
+0: ADV n -> A >> combo n => A
+1: BXL n -> B `xor` literal n => B
+2: BST n -> combo n .&. 7 => B
+3: JNZ n -> GOTO literal n IF A /= 0
+4: BXC _ -> B `xor` C => B
+5: OUT n -> OUTPUT combo n .&. 7
+6: BDV n -> A >> combo n => B
+7: CDV n -> A >> combo n => C

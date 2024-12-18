@@ -30,6 +30,7 @@ library
       AoC.Coord
       AoC.Nat
       AoC.Parsec
+      AoC.PQueue
       AoC.Queue
       AoC.ReadP
       AoC.Search
@@ -73,7 +74,7 @@ library
   build-depends:
       arithmoi
     , array
-    , base >=4.7 && <5
+    , base >=4.18 && <5
     , containers
     , lens
     , linear
@@ -93,7 +94,7 @@ executable aoc-hs-exe
   build-depends:
       advent-of-code-api
     , aoc-hs
-    , base >=4.7 && <5
+    , base >=4.18 && <5
     , containers
     , criterion
     , mtl
