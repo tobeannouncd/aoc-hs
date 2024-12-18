@@ -4,7 +4,6 @@ import Solution
 import AoC.Parsec
 import AoC.Coord
 import Data.Ix
-import qualified Data.Set as S
 import AoC.Search
 import qualified Data.Map as M
 
