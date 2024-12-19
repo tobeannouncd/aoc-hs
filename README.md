@@ -2,6 +2,10 @@
 
 Solutions for Advent of Code problems in Haskell.
 
+## Update 2024-12-18
+
+This repo has been archived due to migrating from Stack to Cabal. You can see the new repo [here](https://github.com/tobeannouncd/aoc-hs-cabal)
+
 ## Running Solutions
 Solutions can be run by executing `stack run -- [ARGUMENT(s)]`
 
